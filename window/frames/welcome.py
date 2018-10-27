@@ -1,6 +1,11 @@
+import threading
+from functools import wraps
+
 from lib import filetools, texttools
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, ttk
+from window.frames.paint import Paint
+from worker import *
 
 import os
 
@@ -11,7 +16,8 @@ class Welcome(Frame):
         self.grid()
         self.create_select_menu()
 
-    def __save_load_file(self, lmbd, btn):
+    @staticmethod
+    def __save_load_file(lmbd, btn):
         def inner():
             result = lmbd()
             if result:
@@ -20,6 +26,31 @@ class Welcome(Frame):
 
         return inner
 
+    def __switch_to_paint(self, buttons):
+        def inner():
+            for b in buttons:
+                b.config(state='disabled')
+            progress_grid = Label(self, text="Waiting results: ")
+            progress_grid.grid(row=4, column=0, padx=6)
+
+            pb = ttk.Progressbar(self, length=300, mode='determinate')
+
+            pb.grid(row=4, columnspan=4, padx=6)
+            pb.start()
+
+            proc = run_paint()
+            def waiter():
+                while proc.is_alive():
+                    time.sleep(0.1)
+
+                self.master.withdraw()
+                self.master = Toplevel(self)
+                self.master.geometry("850x500+300+300")
+                Paint(self.master)
+
+            threading.Thread(target=waiter).start()
+
+        return inner
 
     def create_select_menu(self):
         self.master.title("Process-Based geologic models")
@@ -56,4 +87,5 @@ class Welcome(Frame):
             well_porosity_btn.append(porosity_btn)
 
         calculate_btn = Button(self, text="Predict ", width=20)
+        calculate_btn.config(command=self.__switch_to_paint(well_rock_btn + well_porosity_btn + [calculate_btn, image_grid_btn]))
         calculate_btn.grid(row=3, column=1)

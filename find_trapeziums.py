@@ -25,24 +25,22 @@ def fill_levi(
     min_ans_b = None
 
     #del a letter
-    for ws_a in window_sizes:
-        new_a_index = a_index - ws_a
-        if new_a_index >= -1:
-            current_ans = cache.ans[new_a_index, b_index] + delete_penalty_per_point * ws_a
-            if min_ans is None or min_ans > current_ans:
-                min_ans = current_ans
-                min_ans_a = new_a_index
-                min_ans_b = b_index
+    new_a_index = a_index - 1
+    if new_a_index >= -1:
+        current_ans = cache.ans[new_a_index, b_index] + delete_penalty_per_point
+        if min_ans is None or min_ans > current_ans:
+            min_ans = current_ans
+            min_ans_a = new_a_index
+            min_ans_b = b_index
     
     #del b letter
-    for ws_b in window_sizes:
-        new_b_index = b_index - ws_b
-        if new_b_index >= -1:
-            current_ans = cache.ans[a_index, new_b_index] + delete_penalty_per_point * ws_b
-            if min_ans is None or min_ans > new_b_index:
-                min_ans = current_ans
-                min_ans_a = a_index
-                min_ans_b = new_b_index
+    new_b_index = b_index - 1
+    if new_b_index >= -1:
+        current_ans = cache.ans[a_index, new_b_index] + delete_penalty_per_point
+        if min_ans is None or min_ans > new_b_index:
+            min_ans = current_ans
+            min_ans_a = a_index
+            min_ans_b = new_b_index
     
     #compare a and b letters
     for ws_a in window_sizes:
@@ -75,23 +73,44 @@ def find_trapeziums(
     b_pors
 ):
     window_sizes = [1, 2, 3, 4, 6]
-    delete_penalty_per_point = 0.8
-    resize_penalty_per_point = 0.2
-    h_penalty = 0.004
+    delete_penalty_per_point = 0.5
+    resize_penalty_per_point = 0.1
+    h_penalty = 0.002
     por_penalty = 7
-    type_penalty = 1
+    type_penalty = 2
+
+    avg_por_a_cache = [[None] * len(window_sizes) for i in a_types] 
+    avg_por_b_cache = [[None] * len(window_sizes) for i in b_types] 
+    avg_type_a_cache = [[None] * len(window_sizes) for i in a_pors] 
+    avg_type_b_cache = [[None] * len(window_sizes) for i in b_pors] 
+    window_sizes_map = dict()
+    for i in range(len(window_sizes)):
+        window_sizes_map[window_sizes[i]] = i
 
     def compare_penalty_fn(i_a, i_b, size_a, size_b):
+        i_a += 1
+        i_b += 1
         diff_size_penalty = abs(size_a - size_b) * resize_penalty_per_point
         
         diff_h_penalty = abs(i_a - i_b) * h_penalty
         
-        avg_por_a = sum(a_pors[i_a - size_a : i_a]) * 1.0 / size_a
-        avg_por_b = sum(b_pors[i_b - size_b : i_b]) * 1.0 / size_b
+        size_a_index = window_sizes_map[size_a]
+        size_b_index = window_sizes_map[size_b]
+
+        if avg_por_a_cache[i_a][size_a_index] == None:
+            avg_por_a_cache[i_a][size_a_index] = sum(a_pors[i_a - size_a : i_a]) * 1.0 / size_a
+        if avg_por_b_cache[i_b][size_b_index] == None:
+            avg_por_b_cache[i_b][size_b_index] = sum(b_pors[i_b - size_b : i_b]) * 1.0 / size_b
+        avg_por_a = avg_por_a_cache[i_a][size_a_index]
+        avg_por_b = avg_por_b_cache[i_b][size_b_index]
         diff_por_penalty = por_penalty * abs(avg_por_a - avg_por_b)
         
-        avg_type_a = sum(a_types[i_a - size_a : i_a]) * 1.0 / size_a
-        avg_type_b = sum(b_types[i_b - size_b : i_b]) * 1.0 / size_b
+        if avg_type_a_cache[i_a][size_a_index] == None:
+            avg_type_a_cache[i_a][size_a_index] = sum(a_types[i_a - size_a : i_a]) * 1.0 / size_a
+        if avg_type_b_cache[i_b][size_b_index] == None:
+            avg_type_b_cache[i_b][size_b_index] = sum(b_types[i_b - size_b : i_b]) * 1.0 / size_b
+        avg_type_a = avg_type_a_cache[i_a][size_a_index]
+        avg_type_b = avg_type_b_cache[i_b][size_b_index]
         diff_type_penalty = type_penalty * abs(avg_type_a - avg_type_b)
 
         penalty = (diff_size_penalty 
@@ -121,6 +140,9 @@ def find_trapeziums(
                 cache = c
             )
 
+    rm_c = 0
+    cmp_c = 0
+
     ans = list()
     current_a = a_len - 1
     current_b = b_len - 1
@@ -129,17 +151,25 @@ def find_trapeziums(
         next_b = c.b[current_a, current_b]
 
         if next_a != current_a and next_b != current_b:
+            cmp_c += current_a - next_a
+            print("cmp" + str(current_a) + ":" + str(current_a - next_a))
             ans.append(((current_a, current_b), (next_a - 1, next_b - 1)))
+        else:
+            rm_c += current_a + current_b - next_a - next_b
+            print("rm: " + str(current_a) + ":" + str(current_a + current_b - next_a - next_b))
 
         current_a = next_a
         current_b = next_b
+    print("")
+    print(str(cmp_c))
+    print(str(rm_c))
     return ans
 
-if __name__ == "__main__":
-    a_pors = pd.read_excel('./WellA.xlsx')
-    a_types = pd.read_excel('./WellACoreDescription.xlsx')
-    b_pors = pd.read_excel('./WellB.xlsx')
-    b_types = pd.read_excel('./WellBCoreDescription.xlsx')
+def test_trapeziums():
+    a_pors = pd.read_excel('./sample_data/WellA.xlsx')
+    a_types = pd.read_excel('./sample_data/WellACoreDescription.xlsx')
+    b_pors = pd.read_excel('./sample_data/WellB.xlsx')
+    b_types = pd.read_excel('./sample_data/WellBCoreDescription.xlsx')
     
     a_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(a_types.values[:,1]) if (idx % 7) % 2 == 0 ]
     a_types_param = a_types_param[:-1]
@@ -160,9 +190,11 @@ if __name__ == "__main__":
         idx = random.randint(0, len(b_pors_param) - 2)
         b_pors_param.insert(idx, (b_pors_param[idx] + b_pors_param[idx + 1]) / 2)
 
-    find_trapeziums(
+    return ((a_types_param, b_types_param, a_pors_param, b_pors_param), find_trapeziums(
         a_types_param, 
         b_types_param, 
         a_pors_param, 
         b_pors_param, 
-    )
+    ))
+if __name__ == "__main__":
+    test_trapeziums()
