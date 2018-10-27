@@ -73,7 +73,7 @@ def find_trapeziums(
     b_pors
 ):
     window_sizes = [1, 2, 3, 4, 6, 10]
-    delete_penalty_per_point = 0.3
+    delete_penalty_per_point = 0.4
     resize_penalty_per_point = 0.02
     h_penalty = 0.0
     por_penalty = 10
