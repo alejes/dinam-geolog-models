@@ -156,8 +156,7 @@ def find_trapeziums(
         if next_a != current_a and next_b != current_b:
             # cmp_c += current_a - next_a
             # print("cmp" + str(current_a) + ":" + str(current_a - next_a))
-            if next_a > 0 and next_b > 0:
-                ans.append(((current_a, current_b), (next_a - 1, next_b - 1)))
+            ans.append(((current_a, current_b), (next_a + 1, next_b + 1)))
         # else:
         #     rm_c += current_a + current_b - next_a - next_b
         #     print("rm: " + str(current_a) + ":" + str(current_a + current_b - next_a - next_b))
