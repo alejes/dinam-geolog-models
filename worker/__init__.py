@@ -2,10 +2,14 @@ import json
 import os
 import statistics
 import time
+
 import xlrd
 from multiprocessing import Process
 
 from find_trapeziums import find_trapeziums
+from painter.data import Geo, Match, Well
+from painter import image
+from painter import paint
 
 
 class WorkerConfig:
@@ -99,6 +103,30 @@ def worker(config):
     print(len(nRockA), len(nRockB), len(nPorA), len(nPorB))
     res = find_trapeziums(nRockA, nRockB, nPorA, nPorB)
     print(res)
+
+    _geo = Geo(
+        Well(nRockA, nPorA),
+        Well(nRockB, nRockB),
+        1000,
+        250,
+        750
+    )
+
+    _match = Match(
+        [match[0][0] for match in res],
+        [match[1][0] for match in res],
+        [match[0][1] for match in res],
+        [match[1][1] for match in res],
+    )
+
+    _image = image.create(_geo.height, _geo.width)
+
+    paint.wells(_image, _geo)
+    paint.lines(_image, _geo, _match)
+    # paint.fill(_image, _geo, _match)
+
+    image.show(_image)
+
     time.sleep(7)
 
 
