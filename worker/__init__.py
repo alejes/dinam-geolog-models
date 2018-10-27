@@ -9,7 +9,7 @@ from find_trapeziums import find_trapeziums
 
 
 class WorkerConfig:
-    MAX_HIGN_SIZE = 50
+    MAX_HIGN_SIZE = 600
 
 def load_excel(path):
     if not path:
