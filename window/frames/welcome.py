@@ -1,6 +1,7 @@
 from lib import filetools, texttools
 from tkinter import *
 from tkinter import filedialog
+from window.frames.paint import Paint
 
 import os
 
@@ -11,7 +12,8 @@ class Welcome(Frame):
         self.grid()
         self.create_select_menu()
 
-    def __save_load_file(self, lmbd, btn):
+    @staticmethod
+    def __save_load_file(lmbd, btn):
         def inner():
             result = lmbd()
             if result:
@@ -19,6 +21,12 @@ class Welcome(Frame):
                 btn.config(text=texttools.more(os.path.basename(btn.load_file), 15))
 
         return inner
+
+    def __switch_to_paint(self):
+        self.master.withdraw()
+        self.master = Toplevel(self)
+        self.master.geometry("850x500+300+300")
+        myGUI = Paint(self.master)
 
 
     def create_select_menu(self):
@@ -55,5 +63,5 @@ class Welcome(Frame):
             porosity_btn.grid(row=1 + id, column=2)
             well_porosity_btn.append(porosity_btn)
 
-        calculate_btn = Button(self, text="Predict ", width=20)
+        calculate_btn = Button(self, text="Predict ", width=20, command=self.__switch_to_paint)
         calculate_btn.grid(row=3, column=1)
