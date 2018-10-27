@@ -1,7 +1,11 @@
+import threading
+from functools import wraps
+
 from lib import filetools, texttools
 from tkinter import *
 from tkinter import filedialog, ttk
 from window.frames.paint import Paint
+from worker import *
 
 import os
 
@@ -31,14 +35,24 @@ class Welcome(Frame):
 
             pb = ttk.Progressbar(self, length=300, mode='determinate')
             # self.pack()
-            pb.grid(row=4, columnspan=4, padx=6)
             # self.pack(fill=BOTH, expand=1)
-            pb.start(25)
 
-        # self.master.withdraw()
-        # self.master = Toplevel(self)
-        # self.master.geometry("850x500+300+300")
-        # myGUI = Paint(self.master)
+            pb.grid(row=4, columnspan=4, padx=6)
+            pb.start()
+
+            proc = run_paint()
+            def waiter():
+                while proc.is_alive():
+                    time.sleep(0.1)
+
+                self.master.withdraw()
+                self.master = Toplevel(self)
+                self.master.geometry("850x500+300+300")
+                myGUI = Paint(self.master)
+
+            threading.Thread(target=waiter).start()
+            # proc.join()
+
         return inner
 
 
