@@ -1,8 +1,4 @@
-from lib import filetools, texttools
 from tkinter import *
-from tkinter import filedialog
-
-import os
 
 
 class Paint(Frame):
@@ -10,15 +6,6 @@ class Paint(Frame):
         Frame.__init__(self, master)
         self.grid()
         self.create_select_menu()
-
-    def __save_load_file(self, lmbd, btn):
-        def inner():
-            result = lmbd()
-            if result:
-                btn.load_file = result.name
-                btn.config(text=texttools.more(os.path.basename(btn.load_file), 15))
-
-        return inner
 
 
     def create_select_menu(self):
