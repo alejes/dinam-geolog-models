@@ -1,6 +1,6 @@
 from lib import filetools, texttools
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 from window.frames.paint import Paint
 
 import os
@@ -22,11 +22,24 @@ class Welcome(Frame):
 
         return inner
 
-    def __switch_to_paint(self):
-        self.master.withdraw()
-        self.master = Toplevel(self)
-        self.master.geometry("850x500+300+300")
-        myGUI = Paint(self.master)
+    def __switch_to_paint(self, buttons):
+        def inner():
+            for b in buttons:
+                b.config(state='disabled')
+            progress_grid = Label(self, text="Waiting results: ")
+            progress_grid.grid(row=4, column=0, padx=6)
+
+            pb = ttk.Progressbar(self, length=300, mode='determinate')
+            # self.pack()
+            pb.grid(row=4, columnspan=4, padx=6)
+            # self.pack(fill=BOTH, expand=1)
+            pb.start(25)
+
+        # self.master.withdraw()
+        # self.master = Toplevel(self)
+        # self.master.geometry("850x500+300+300")
+        # myGUI = Paint(self.master)
+        return inner
 
 
     def create_select_menu(self):
@@ -63,5 +76,6 @@ class Welcome(Frame):
             porosity_btn.grid(row=1 + id, column=2)
             well_porosity_btn.append(porosity_btn)
 
-        calculate_btn = Button(self, text="Predict ", width=20, command=self.__switch_to_paint)
+        calculate_btn = Button(self, text="Predict ", width=20)
+        calculate_btn.config(command=self.__switch_to_paint(well_rock_btn + well_porosity_btn + [calculate_btn, image_grid_btn]))
         calculate_btn.grid(row=3, column=1)
