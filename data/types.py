@@ -8,6 +8,7 @@ Bitmap = List[List[ColorPoint]]
 
 Interval = NamedTuple('Interval', [('a', int), ('b', int)])
 Line = NamedTuple('Line', [('a', Interval), ('b', Interval)])
+DrillData = NamedTuple('DrillData', [('h', float), ('porosity', float)])
 
 Porosity = List[float]
 RockTypes = List[float]
