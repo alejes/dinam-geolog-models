@@ -52,18 +52,23 @@ class Paint(Frame):
         # self.im = Image.fromarray(self.rockType)
         # print(self.im.mode)
         lut = []
-        lut.extend([255, 56, 20])  # ff3814
-        lut.extend([1, 159, 103])  # 019f67
-        lut.extend([0, 0, 0])  # black
+
+        def to_hex(d):
+            z=hex(d)[2:]
+            if len(z) == 1:
+                z = '0' + z
+            return z
+
+        for g in range(0, 254):
+            lut.extend([100, g, 100])
+
+        lut.extend([255, 255, 255])
         self.imPorosity.putpalette(lut)
         self.photoPorosity = ImageTk.PhotoImage(image=self.imPorosity)
         self.canvasPorosity.create_image(0, 0, image=self.photoPorosity, anchor=NW)
         self.canvasPorosity.create_text(self.porosity.shape[1] + 60, 150, text="Legend:", justify=CENTER, font="Verdana 20")
-        self.canvasPorosity.create_text(self.porosity.shape[1] + 60, 190, text="sandstone:", justify=LEFT,
-                                font="Verdana 14")
-        self.canvasPorosity.create_text(self.porosity.shape[1] + 60, 210, text="shale:", justify=LEFT, font="Verdana 14")
-        self.canvasPorosity.create_oval(self.porosity.shape[1] + 130, 190, self.porosity.shape[1] + 130, 190, width=15,
-                                outline="#ff3814")
-        self.canvasPorosity.create_oval(self.porosity.shape[1] + 130, 210, self.porosity.shape[1] + 130, 210, width=15,
-                                outline="#019f67")
+        for g in range(0, 254):
+            self.canvasPorosity.create_oval(self.porosity.shape[1] + 130, g * 2, self.porosity.shape[1] + 130 - 10, g*2, width=1,
+                                    outline="#" + to_hex(100) + to_hex(g) + to_hex(100))
+
         self.master.update()
