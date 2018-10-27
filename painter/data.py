@@ -39,6 +39,20 @@ class Geo:
         return len(self.right_well.core)
 
 
+class Layer:
+    def __init__(self, from_depth: int, to_depth: int, contains_well: bool) -> None:
+        self.from_depth = from_depth
+        self.to_depth = to_depth
+        self.contains_well = contains_well
+
+
+class GeoTransformation:
+    def __init__(self, layers: List[Layer], width: int, height: int) -> None:
+        self.layers = layers
+        self.width = width
+        self.height = height
+
+
 class Match:
     def __init__(self, left_from: List[int], left_to: List[int], right_from: List[int], right_to: List[int]) -> None:
         assert len(left_from) == len(left_to)

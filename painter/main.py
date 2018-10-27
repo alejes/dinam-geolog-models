@@ -24,16 +24,20 @@ if __name__ == '__main__':
         750
     )
     _match = Match(
-        [match[0][0] for match in test_match],
-        [match[1][0] for match in test_match],
-        [match[0][1] for match in test_match],
-        [match[1][1] for match in test_match],
+        [match[1][0] for match in reversed(test_match)],
+        [match[0][0] + 1 for match in reversed(test_match)],
+        [match[1][1] for match in reversed(test_match)],
+        [match[0][1] + 1 for match in reversed(test_match)],
     )
     #test shit end
     _image = image.create(_geo.height, _geo.width)
 
+    # paint.lines(_image, _geo, _match)
+    paint.fill(_image, _geo, _match)
     paint.wells(_image, _geo)
-    paint.lines(_image, _geo, _match)
-    # paint.fill(_image, _geo, _match)
 
-    image.show(_image)
+    _base_image = image.create(_geo.height, _geo.width)
+    paint.wells(_base_image, _geo)
+    paint.lines(_base_image, _geo, _match)
+
+    image.show(_image, _base_image)

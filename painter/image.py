@@ -6,6 +6,10 @@ def create(height: int, width: int) -> np.ndarray:
     return np.zeros((height, width), np.uint8)
 
 
+def load(image_name: str) -> np.ndarray:
+    return cv2.imread(image_name, 1)
+
+
 def show(*images: np.ndarray):
     for i, image in enumerate(images):
         cv2.imshow('image-' + str(i), image)
