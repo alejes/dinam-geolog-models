@@ -76,6 +76,10 @@ def create_lines(left_from: int, left_to: int, right_from: int, right_to: int, g
     return Line(a, y1 - a * x1), Line(value_a, value1 - value_a * x1)
 
 
+def bined(image: np.ndarray):
+    return cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)[1]
+
+
 # def avg_line(line1: Line, line2: Line, x: int, y: int) -> Line:
 #     a = line1.a + line2.a
 #     return Line( )
