@@ -80,6 +80,7 @@ def normalize_rocks(data1, data2, data3, data4):
 
 def worker(config):
     config = json.loads(config)
+    return
     print(config)
     print(config.values())
     rockA = load_excel(config.get('rock_A', "./sample_data/WellACoreDescription.xlsx"))
