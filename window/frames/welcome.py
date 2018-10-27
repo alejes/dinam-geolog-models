@@ -34,8 +34,6 @@ class Welcome(Frame):
             progress_grid.grid(row=4, column=0, padx=6)
 
             pb = ttk.Progressbar(self, length=300, mode='determinate')
-            # self.pack()
-            # self.pack(fill=BOTH, expand=1)
 
             pb.grid(row=4, columnspan=4, padx=6)
             pb.start()
@@ -48,13 +46,11 @@ class Welcome(Frame):
                 self.master.withdraw()
                 self.master = Toplevel(self)
                 self.master.geometry("850x500+300+300")
-                myGUI = Paint(self.master)
+                Paint(self.master)
 
             threading.Thread(target=waiter).start()
-            # proc.join()
 
         return inner
-
 
     def create_select_menu(self):
         self.master.title("Process-Based geologic models")
