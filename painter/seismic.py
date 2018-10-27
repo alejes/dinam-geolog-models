@@ -1,15 +1,12 @@
+import cv2
 import numpy as np
 
 from data import *
 
 
-def parse_transformation(image: np.ndarray, width_m: int, left_height: int) -> GeoTransformation:
-
-    k = 5  # TODO 2.5
+def parse_transformation(image: np.ndarray, width_m: int, left_height: int, k: float) -> GeoTransformation:
 
     layers = []
-    head_layer = None
-    last_layer = None
 
     def find_layer(index):
         orange_end = None
@@ -39,40 +36,36 @@ def parse_transformation(image: np.ndarray, width_m: int, left_height: int) -> G
 
         if layer is not None:
             layers.append(layer)
-            if head_layer is None:
-                head_layer = i
-            last_layer = i
 
     for index, layer in enumerate(layers):
         if layer.to_depth - layer.from_depth < 10:
             layer.from_depth = (layers[index - 2].from_depth + layers[index + 2].from_depth) // 2
 
-    # for layer in layers:
-    #     print(layer.from_depth, layer.to_depth, layer.contains_well)
-
-    width_k = width_m / (last_layer - head_layer) / k
+    width_k = width_m / len(layers) / k
     height_k = left_height / (layers[0].to_depth - layers[0].from_depth) / k
     min_depth = min(layer.from_depth for layer in layers)
-
-    print(width_k, len(layers))
 
     def adopt(depth):
         return int((depth - min_depth) * height_k)
 
-    # new_width = int(width_m / k) + 1
-    new_width = len(layers)
-    new_height = int((max(layer.to_depth for layer in layers) - min_depth) * height_k) + 1
-    new_layers = [Layer(adopt(layer.from_depth), adopt(layer.to_depth), layer.contains_well) for layer in layers]
-    # final_layers = [Layer() for layer in layers]
+    # new_width = int(width_m / k)
+    new_width = len(layers) * int(width_k)  # width_k ~= 5.016
+    new_height = int((max(layer.to_depth for layer in layers) - min_depth) * height_k)
+    new_layers = [l for layer in layers for l
+                  in [Layer(adopt(layer.from_depth), adopt(layer.to_depth), layer.contains_well)] * int(width_k)]
 
-    return GeoTransformation(new_layers, new_width, new_height)
+    left_well_intent = min(i for i, layer in enumerate(new_layers) if layer.contains_well)
+    right_well_intent = max(i for i, layer in enumerate(new_layers) if layer.contains_well)
+
+    return GeoTransformation(new_layers, new_width, new_height, left_well_intent, right_well_intent)
 
 
-def paint_transformation(image: np.ndarray, transformation: GeoTransformation):
+def paint_transformation(image: np.ndarray, transformation: GeoTransformation, source: np.ndarray):
     assert image.shape[0] == transformation.height
     assert image.shape[1] == transformation.width
+    assert source.shape[1] == transformation.width
 
     for i, layer in enumerate(transformation.layers):
-        image[layer.from_depth, i] = 255
-        image[layer.to_depth, i] = 255
+        image[layer.from_depth: layer.to_depth, i] = \
+            cv2.resize(np.asmatrix(source[:, i]), (layer.to_depth - layer.from_depth, 1))
 
