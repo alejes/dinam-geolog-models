@@ -5,9 +5,11 @@ import time
 import xlrd
 from multiprocessing import Process
 
+from find_trapeziums import find_trapeziums
+
 
 class WorkerConfig:
-    MAX_HIGN_SIZE = 600
+    MAX_HIGN_SIZE = 50
 
 def load_excel(path):
     if not path:
@@ -86,12 +88,17 @@ def worker(config):
     print('rockB', rockB[:10])
     print('porA', porisityA[:10])
     print('porB', porisityB[:10])
+
     nRockA, nRockB, nPorA, nPorB, start, end, step = normalize_rocks(rockA, rockB, porisityA, porisityB)
     print(nRockA[:10])
     print(nRockB[:10])
     print(nPorA[:10])
     print(nPorB[:10])
     print(start, end, step)
+
+    print(len(nRockA), len(nRockB), len(nPorA), len(nPorB))
+    res = find_trapeziums(nRockA, nRockB, nPorA, nPorB)
+    print(res)
     time.sleep(7)
 
 
