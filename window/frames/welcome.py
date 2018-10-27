@@ -1,5 +1,4 @@
 import threading
-from functools import wraps
 
 from lib import filetools, texttools
 from tkinter import *
@@ -14,15 +13,17 @@ class Welcome(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.grid()
+        self.task_config = {}
+        self.ready_button = None
         self.create_select_menu()
 
-    @staticmethod
-    def __save_load_file(lmbd, btn):
+    def __save_load_file(self, lmbd, btn, name):
         def inner():
             result = lmbd()
             if result:
-                btn.load_file = result.name
-                btn.config(text=texttools.more(os.path.basename(btn.load_file), 15))
+                btn.value = result.name
+                btn.config(text=texttools.more(os.path.basename(btn.value), 15))
+                self.task_config[name] = btn.value
 
         return inner
 
@@ -38,7 +39,8 @@ class Welcome(Frame):
             pb.grid(row=4, columnspan=4, padx=6)
             pb.start()
 
-            proc = run_paint()
+            proc = run_paint(self.task_config)
+
             def waiter():
                 while proc.is_alive():
                     time.sleep(0.1)
@@ -62,7 +64,7 @@ class Welcome(Frame):
         image_grid_btn = Button(self, text="Load image", width=20)
         image_grid_btn.config(command=self.__save_load_file(lambda: filedialog.askopenfile(title="Select file",
                                                                        filetypes=(("jpeg files", filetools.get_file_types("jpeg")),
-                                                                                    ("all files", "*.*"))), image_grid_btn))
+                                                                                    ("all files", "*.*"))), image_grid_btn, "image_grid"))
         image_grid_btn.grid(row=0, column=1)
 
         well_rock_btn = []
@@ -74,15 +76,14 @@ class Welcome(Frame):
             rock_btn = Button(self, text="Load rock type", width=20)
             rock_btn.config(command=self.__save_load_file(lambda: filedialog.askopenfile(title="Select rock type file",
                                                                         filetypes=(("data files",filetools.get_file_types("data")),
-                                                                                    ("all files","*.*"))),rock_btn))
+                                                                                    ("all files","*.*"))),rock_btn, "rock_" + name))
             rock_btn.grid(row=1 + id, column=1)
             well_rock_btn.append(rock_btn)
 
             porosity_btn = Button(self, text="Load porosity", width=20)
             porosity_btn.config(command=self.__save_load_file(lambda: filedialog.askopenfile(title="Select porosity file",
                                                                         filetypes=(("data files",filetools.get_file_types("data")),
-                                                                                       ("all files","*.*"))),
-                                                                        porosity_btn))
+                                                                                       ("all files","*.*"))),porosity_btn, "porisity_" + name))
             porosity_btn.grid(row=1 + id, column=2)
             well_porosity_btn.append(porosity_btn)
 
