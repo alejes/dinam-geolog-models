@@ -169,38 +169,38 @@ def find_trapeziums(
     print('find_trapeziums finished')
     return ans
 
-# def test_trapeziums():
-#     a_pors = pd.read_excel('./sample_data/WellA.xlsx')
-#     a_types = pd.read_excel('./sample_data/WellACoreDescription.xlsx')
-#     b_pors = pd.read_excel('./sample_data/WellB.xlsx')
-#     b_types = pd.read_excel('./sample_data/WellBCoreDescription.xlsx')
-#
-#     a_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(a_types.values[:,1]) if (idx % 7) % 2 == 0 ]
-#     a_types_param = a_types_param[:-1]
-#     b_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(b_types.values[:,1])]
-#     a_pors_param = list(a_pors.values[:,1])
-#     b_pors_param = list(b_pors.values[:,1])
-#
-#     a_types_param = [val for idx, val in enumerate(a_types_param) if idx % 40 == 0]
-#     b_types_param = [val for idx, val in enumerate(b_types_param) if idx % 40 == 0]
-#     a_pors_param = [val for idx, val in enumerate(a_pors_param) if idx % 40 == 0]
-#     b_pors_param = [val for idx, val in enumerate(b_pors_param) if idx % 40 == 0]
-#
-#     while len(a_pors_param) < len(a_types_param):
-#         idx = random.randint(0, len(a_pors_param) - 2)
-#         a_pors_param.insert(idx, (a_pors_param[idx] + a_pors_param[idx + 1]) / 2)
-#
-#     while len(b_pors_param) < len(b_types_param):
-#         idx = random.randint(0, len(b_pors_param) - 2)
-#         b_pors_param.insert(idx, (b_pors_param[idx] + b_pors_param[idx + 1]) / 2)
-#
-#     return ((a_types_param, b_types_param, a_pors_param, b_pors_param), find_trapeziums(
-#         a_types_param,
-#         b_types_param,
-#         a_pors_param,
-#         b_pors_param,
-#     ))
+def test_trapeziums():
+    a_pors = pd.read_excel('./sample_data/WellA.xlsx')
+    a_types = pd.read_excel('./sample_data/WellACoreDescription.xlsx')
+    b_pors = pd.read_excel('./sample_data/WellB.xlsx')
+    b_types = pd.read_excel('./sample_data/WellBCoreDescription.xlsx')
 
-# if __name__ == "__main__":
-#     while(True):
-#         test_trapeziums()
+    a_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(a_types.values[:,1]) if (idx % 7) % 2 == 0 ]
+    a_types_param = a_types_param[:-1]
+    b_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(b_types.values[:,1])]
+    a_pors_param = list(a_pors.values[:,1])
+    b_pors_param = list(b_pors.values[:,1])
+
+    a_types_param = [val for idx, val in enumerate(a_types_param) if idx % 40 == 0]
+    b_types_param = [val for idx, val in enumerate(b_types_param) if idx % 40 == 0]
+    a_pors_param = [val for idx, val in enumerate(a_pors_param) if idx % 40 == 0]
+    b_pors_param = [val for idx, val in enumerate(b_pors_param) if idx % 40 == 0]
+
+    while len(a_pors_param) < len(a_types_param):
+        idx = random.randint(0, len(a_pors_param) - 2)
+        a_pors_param.insert(idx, (a_pors_param[idx] + a_pors_param[idx + 1]) / 2)
+
+    while len(b_pors_param) < len(b_types_param):
+        idx = random.randint(0, len(b_pors_param) - 2)
+        b_pors_param.insert(idx, (b_pors_param[idx] + b_pors_param[idx + 1]) / 2)
+
+    return ((a_types_param, b_types_param, a_pors_param, b_pors_param), find_trapeziums(
+        a_types_param,
+        b_types_param,
+        a_pors_param,
+        b_pors_param,
+    ))
+
+if __name__ == "__main__":
+    while(True):
+        test_trapeziums()
