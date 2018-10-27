@@ -75,9 +75,9 @@ def find_trapeziums(
     window_sizes = [1, 2, 3, 4, 6, 10]
     delete_penalty_per_point = 0.3
     resize_penalty_per_point = 0.02
-    h_penalty = 0.002
-    por_penalty = 7
-    type_penalty = 2
+    h_penalty = 0.0
+    por_penalty = 10
+    type_penalty = 2.5
 
     avg_por_a_cache = [[None] * len(window_sizes) for i in a_types] 
     avg_por_b_cache = [[None] * len(window_sizes) for i in b_types] 
