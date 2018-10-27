@@ -20,12 +20,6 @@ def fill(image: np.ndarray, geo: Geo, match: Match) -> None:
 
     _lines = [create_lines(l1, l2, r1, r2, geo) for l1, l2, r1, r2 in match.iterator()]
 
-    print(geo.left_well.core)
-    print(match.left_from)
-    print(match.left_to)
-    print(match.right_from)
-    print(match.right_to)
-
     for i in range(geo.width):
         key_values = [(x, np.mean([a[1] for a in group])) for (x, group)
                       in groupby(sorted(((int(line(i)), value_line(i))
@@ -73,8 +67,6 @@ def create_lines(left_from: int, left_to: int, right_from: int, right_to: int, g
 
     value1 = sum(geo.left_well.core[left_from: left_to]) / (left_to - left_from)
     value2 = sum(geo.right_well.core[right_from: right_to]) / (right_to - right_from)
-
-    print(value1, value2)
 
     a = (y2 - y1) / (x2 - x1)
 
