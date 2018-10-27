@@ -8,8 +8,8 @@ from painter.data import Geo, Match
 
 
 def wells(image: np.ndarray, geo: Geo) -> None:
-    image[:, geo.left_well_indent] = [255 * x for x in geo.left_well.core]
-    image[:, geo.right_well_indent] = [255 * x for x in geo.right_well.core]
+    image[:, geo.left_well_indent] = [254 * x for x in geo.left_well.core]
+    image[:, geo.right_well_indent] = [254 * x for x in geo.right_well.core]
 
 
 def lines(image: np.ndarray, geo: Geo, match: Match):
@@ -17,9 +17,11 @@ def lines(image: np.ndarray, geo: Geo, match: Match):
         cv2.line(image, (geo.left_well_indent, avg(l1, l2)), (geo.right_well_indent, avg(r1, r2)), 125, 1)
 
 
-def fill(image: np.ndarray, geo: Geo, match: Match) -> None:
+def fill(image: np.ndarray, geo: Geo, match: Match, name: str="core") -> None:
 
-    _lines = [create_lines(l1, l2, r1, r2, geo) for l1, l2, r1, r2 in match.iterator()]
+    values = getattr(geo.left_well, name) + getattr(geo.right_well, name)
+    print(min(values), max(values))
+    _lines = [create_lines(l1, l2, r1, r2, geo, name, min(values), max(values)) for l1, l2, r1, r2 in match.iterator()]
 
     for i in range(geo.width):
         key_values = [(x, np.mean([a[1] for a in group])) for (x, group)
@@ -27,7 +29,6 @@ def fill(image: np.ndarray, geo: Geo, match: Match) -> None:
                                          for (line, value_line) in _lines), key=lambda n: n[0]), key=lambda m: m[0])
                       if 0 <= x < geo.height]
         key_values.sort(key=lambda x: x[0])
-        # print(key_values)
 
         up_index = None
         down_index = 0  # assume non empty
@@ -48,7 +49,7 @@ def fill(image: np.ndarray, geo: Geo, match: Match) -> None:
                 up = (key_values[down_index][0] - j) / delta
                 value = up * key_values[up_index][1] + down * key_values[down_index][1]
 
-            image[j, i] = 255 * max(0, min(1, value))
+            image[j, i] = 254 * max(0, min(1, value))
 
 
 class Line:
@@ -60,14 +61,17 @@ class Line:
         return self.a * x + self.b
 
 
-def create_lines(left_from: int, left_to: int, right_from: int, right_to: int, geo: Geo) -> (Line, Line):
+def create_lines(left_from: int, left_to: int, right_from: int, right_to: int, geo: Geo, name: str, min_value: float, max_value: float) -> (Line, Line):
     x1 = geo.left_well_indent
     y1 = avg(left_from, left_to)
     x2 = geo.right_well_indent
     y2 = avg(right_from, right_to)
 
-    value1 = sum(geo.left_well.core[left_from: left_to]) / (left_to - left_from)
-    value2 = sum(geo.right_well.core[right_from: right_to]) / (right_to - right_from)
+    def norm(value):
+        return (value - min_value) / (max_value - min_value)
+
+    value1 = norm(sum(getattr(geo.left_well, name)[left_from: left_to]) / (left_to - left_from))
+    value2 = norm(sum(getattr(geo.right_well, name)[right_from: right_to]) / (right_to - right_from))
 
     a = (y2 - y1) / (x2 - x1)
 
@@ -76,8 +80,35 @@ def create_lines(left_from: int, left_to: int, right_from: int, right_to: int, g
     return Line(a, y1 - a * x1), Line(value_a, value1 - value_a * x1)
 
 
+def filtered(image: np.ndarray):
+    return cv2.GaussianBlur(image, (5, 5), 0)
+
+
+def resized(image: np.ndarray):
+    return cv2.resize(image, (500, 250))
+
+
+def save(image: np.ndarray, name: str):
+    cv2.imwrite(name, image)
+
+
 def bined(image: np.ndarray):
-    return cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)[1]
+    def f(x):
+        if x < 127:
+            return 0
+        elif x == 255:
+            return 255
+        else:
+            return 254
+
+    new_image = image.copy()
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            new_image[i, j] = f(image[i, j])
+
+    return new_image
+    # func = np.vectorize(lambda x: 0 if x < 127 else (255 if x == 255 else 254))
+    # return func(image)
 
 
 # def avg_line(line1: Line, line2: Line, x: int, y: int) -> Line:

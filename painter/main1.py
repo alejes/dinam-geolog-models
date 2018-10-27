@@ -31,4 +31,4 @@ if __name__ == '__main__':
     _result = image.create(_transformation.height, _transformation.width)
     seismic.paint_transformation(_result, _transformation, _image)
 
-    image.show(_image, _result)
+    image.show(_image, paint.bined(_result))
