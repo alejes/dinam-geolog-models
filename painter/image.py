@@ -6,8 +6,9 @@ def create(height: int, width: int) -> np.ndarray:
     return np.zeros((height, width), np.uint8)
 
 
-def show(image: np.ndarray):
-    cv2.imshow('image', image)
+def show(*images: np.ndarray):
+    for i, image in enumerate(images):
+        cv2.imshow('image-' + str(i), image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

@@ -72,12 +72,12 @@ def find_trapeziums(
     a_pors,
     b_pors
 ):
-    window_sizes = [1, 2, 3, 4, 6]
-    delete_penalty_per_point = 0.5
-    resize_penalty_per_point = 0.1
-    h_penalty = 0.002
-    por_penalty = 7
-    type_penalty = 2
+    window_sizes = [1, 2, 3, 4, 6, 10]
+    delete_penalty_per_point = 0.3
+    resize_penalty_per_point = 0.02
+    h_penalty = 0.0
+    por_penalty = 10
+    type_penalty = 2.5
 
     avg_por_a_cache = [[None] * len(window_sizes) for i in a_types] 
     avg_por_b_cache = [[None] * len(window_sizes) for i in b_types] 
@@ -140,8 +140,8 @@ def find_trapeziums(
                 cache = c
             )
 
-    rm_c = 0
-    cmp_c = 0
+    # rm_c = 0
+    # cmp_c = 0
 
     ans = list()
     current_a = a_len - 1
@@ -151,18 +151,18 @@ def find_trapeziums(
         next_b = c.b[current_a, current_b]
 
         if next_a != current_a and next_b != current_b:
-            cmp_c += current_a - next_a
-            print("cmp" + str(current_a) + ":" + str(current_a - next_a))
+            # cmp_c += current_a - next_a
+            # print("cmp" + str(current_a) + ":" + str(current_a - next_a))
             ans.append(((current_a, current_b), (next_a - 1, next_b - 1)))
-        else:
-            rm_c += current_a + current_b - next_a - next_b
-            print("rm: " + str(current_a) + ":" + str(current_a + current_b - next_a - next_b))
+        # else:
+        #     rm_c += current_a + current_b - next_a - next_b
+        #     print("rm: " + str(current_a) + ":" + str(current_a + current_b - next_a - next_b))
 
         current_a = next_a
         current_b = next_b
-    print("")
-    print(str(cmp_c))
-    print(str(rm_c))
+    # print("")
+    # print(str(cmp_c))
+    # print(str(rm_c))
     return ans
 
 def test_trapeziums():
