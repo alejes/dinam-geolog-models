@@ -73,11 +73,11 @@ def find_trapeziums(
     b_pors
 ):
     window_sizes = [1, 2, 3, 4, 6]
-    delete_penalty_per_point = 0.8
-    resize_penalty_per_point = 0.2
-    h_penalty = 0.004
+    delete_penalty_per_point = 0.5
+    resize_penalty_per_point = 0.1
+    h_penalty = 0.002
     por_penalty = 7
-    type_penalty = 1
+    type_penalty = 2
 
     avg_por_a_cache = [[None] * len(window_sizes) for i in a_types] 
     avg_por_b_cache = [[None] * len(window_sizes) for i in b_types] 
@@ -140,6 +140,9 @@ def find_trapeziums(
                 cache = c
             )
 
+    rm_c = 0
+    cmp_c = 0
+
     ans = list()
     current_a = a_len - 1
     current_b = b_len - 1
@@ -148,20 +151,25 @@ def find_trapeziums(
         next_b = c.b[current_a, current_b]
 
         if next_a != current_a and next_b != current_b:
+            cmp_c += current_a - next_a
             print("cmp" + str(current_a) + ":" + str(current_a - next_a))
             ans.append(((current_a, current_b), (next_a - 1, next_b - 1)))
         else:
+            rm_c += current_a + current_b - next_a - next_b
             print("rm: " + str(current_a) + ":" + str(current_a + current_b - next_a - next_b))
 
         current_a = next_a
         current_b = next_b
+    print("")
+    print(str(cmp_c))
+    print(str(rm_c))
     return ans
 
-if __name__ == "__main__":
-    a_pors = pd.read_excel('./WellA.xlsx')
-    a_types = pd.read_excel('./WellACoreDescription.xlsx')
-    b_pors = pd.read_excel('./WellB.xlsx')
-    b_types = pd.read_excel('./WellBCoreDescription.xlsx')
+def test_trapeziums():
+    a_pors = pd.read_excel('./sample_data/WellA.xlsx')
+    a_types = pd.read_excel('./sample_data/WellACoreDescription.xlsx')
+    b_pors = pd.read_excel('./sample_data/WellB.xlsx')
+    b_types = pd.read_excel('./sample_data/WellBCoreDescription.xlsx')
     
     a_types_param = [1 if val == 'sandstone' else 0 for idx, val in enumerate(a_types.values[:,1]) if (idx % 7) % 2 == 0 ]
     a_types_param = a_types_param[:-1]
@@ -182,9 +190,11 @@ if __name__ == "__main__":
         idx = random.randint(0, len(b_pors_param) - 2)
         b_pors_param.insert(idx, (b_pors_param[idx] + b_pors_param[idx + 1]) / 2)
 
-    find_trapeziums(
+    return ((a_types_param, b_types_param, a_pors_param, b_pors_param), find_trapeziums(
         a_types_param, 
         b_types_param, 
         a_pors_param, 
         b_pors_param, 
-    )
+    ))
+if __name__ == "__main__":
+    test_trapeziums()
