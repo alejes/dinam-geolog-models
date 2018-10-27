@@ -47,10 +47,12 @@ class Layer:
 
 
 class GeoTransformation:
-    def __init__(self, layers: List[Layer], width: int, height: int) -> None:
+    def __init__(self, layers: List[Layer], width: int, height: int, left_well_intent: int, right_well_intent: int) -> None:
         self.layers = layers
         self.width = width
         self.height = height
+        self.left_well_intent = left_well_intent
+        self.right_well_intent = right_well_intent
 
 
 class Match:
