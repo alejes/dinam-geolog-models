@@ -72,8 +72,10 @@ def find_trapeziums(
     a_pors,
     b_pors
 ):
+    print('find_trapeziums started')
+
     window_sizes = [1, 2, 3, 4, 6, 10]
-    delete_penalty_per_point = 0.4
+    delete_penalty_per_point = 0.5
     resize_penalty_per_point = 0.02
     h_penalty = 0.0
     por_penalty = 10
@@ -140,9 +142,10 @@ def find_trapeziums(
                 cache = c
             )
 
+    print('find_trapeziums cahce built')
+
     # rm_c = 0
     # cmp_c = 0
-
     ans = list()
     current_a = a_len - 1
     current_b = b_len - 1
@@ -163,6 +166,7 @@ def find_trapeziums(
     # print("")
     # print(str(cmp_c))
     # print(str(rm_c))
+    print('find_trapeziums finished')
     return ans
 
 def test_trapeziums():
@@ -197,4 +201,5 @@ def test_trapeziums():
         b_pors_param, 
     ))
 if __name__ == "__main__":
-    test_trapeziums()
+    while(True):
+        test_trapeziums()
