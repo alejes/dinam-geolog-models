@@ -100,7 +100,6 @@ def bined(image: np.ndarray):
         if x < 127:
             return 0
         elif x == 255:
-            print(x)
             return 255
         else:
             return 254
@@ -113,6 +112,24 @@ def bined(image: np.ndarray):
     return new_image
     # func = np.vectorize(lambda x: 0 if x < 127 else (255 if x == 255 else 254))
     # return func(image)
+
+def colorize(image: np.ndarray):
+    new_image = np.zeros((image.shape[0], image.shape[1], 3))
+    def get_rgb(x):
+        if x < 127:
+            return 255, 56, 20
+        elif x == 255:
+            return 0, 0, 0
+        else:
+            return 1, 159, 103
+
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            r, g, b = get_rgb(image[i, j])
+            new_image[i, j, 0] = r
+            new_image[i, j, 1] = g
+            new_image[i, j, 2] = b
+    return new_image
 
 
 # def avg_line(line1: Line, line2: Line, x: int, y: int) -> Line:
