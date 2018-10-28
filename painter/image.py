@@ -2,8 +2,11 @@ import cv2
 import numpy as np
 
 
-def create(height: int, width: int) -> np.ndarray:
-    return np.zeros((height, width), np.uint8)
+def create(height: int, width: int, white: bool=False) -> np.ndarray:
+    image = np.zeros((height, width), np.uint8)
+    if white:
+        image.fill(255)
+    return image
 
 
 def load(image_name: str) -> np.ndarray:
