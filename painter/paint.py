@@ -100,6 +100,7 @@ def bined(image: np.ndarray):
         if x < 127:
             return 0
         elif x == 255:
+            print(x)
             return 255
         else:
             return 254

@@ -7,6 +7,7 @@ import numpy as np
 class Paint(Frame):
     def __init__(self, master, rockType, porosity):
         Frame.__init__(self, master, width=max([rockType.shape[1], porosity.shape[1], 500])+300, height=max([rockType.shape[0] + porosity.shape[0], 400]))
+        print(rockType)
         self.map_binary = lambda x: 2 if x == 255 else (0 if x <= 127 else 1)
         self.map_binary = np.vectorize(self.map_binary)
         self.rockType = self.map_binary(rockType)

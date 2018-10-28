@@ -52,7 +52,7 @@ class Welcome(Frame):
                 self.master.withdraw()
                 self.master = Toplevel(self)
                 # self.master.geometry("950x500+300+300")
-                data1 = data['data1']
+                data1 = data['rock-resized']
                 data2 = data['data2']
                 Paint(self.master, data1, data2)
 

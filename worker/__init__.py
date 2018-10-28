@@ -11,7 +11,7 @@ from multiprocessing import Process, Queue
 from find_trapeziums import find_trapeziums
 from painter.data import Geo, Match, Well
 from painter import image
-from painter import paint
+from painter import paint,seismic
 
 
 class WorkerConfig:
@@ -84,10 +84,7 @@ def normalize_rocks(data1, data2, data3, data4):
 def worker(config, q):
     config = json.loads(config)
     print('put')
-    q.put({'data1': np.array(np.random.random((400, 650)) * 255, dtype=int),
-    'data2': np.array(np.random.random((400, 500)) * 255, dtype=int)})
-    print('put')
-    return
+
     print(config)
     print(config.values())
     _seismic = image.load(config.get("image_grid", "painter/SeismicScaled.jpg"))
@@ -166,6 +163,8 @@ def worker(config, q):
 
     paint.save(add_scale(paint.depth(paint.resized(_core_result)), global_min, global_max), "core_4.png")
     paint.save(add_scale(paint.depth(paint.resized(_por_result)), global_min, global_max), "porosity_4.png")
+    q.put({'rock-resized': paint.resized(_core_result),
+           'data2': np.array(np.random.random((400, 500)) * 255, dtype=int)})
 
 
 def run_paint(config):
