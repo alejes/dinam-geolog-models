@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from data import *
+from painter.data import *
 
 
 def parse_transformation(image: np.ndarray, width_m: int, left_height: int, k: float) -> GeoTransformation:
