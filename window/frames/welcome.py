@@ -48,8 +48,8 @@ class Welcome(Frame):
 
                 self.master.withdraw()
                 self.master = Toplevel(self)
-                self.master.geometry("850x500+300+300")
-                data1 = np.array(np.random.random((400, 500)) * 255, dtype=int)
+                # self.master.geometry("950x500+300+300")
+                data1 = np.array(np.random.random((400, 650)) * 255, dtype=int)
                 data2 = np.array(np.random.random((400, 500)) * 255, dtype=int)
                 Paint(self.master, data1, data2)
 
