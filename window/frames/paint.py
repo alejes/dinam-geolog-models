@@ -40,7 +40,7 @@ class Paint(Frame):
         self.canvas.create_text(self.rockType.shape[1]+60, 150, text="Legend:",justify=CENTER, font="Verdana 20")
         self.canvas.create_text(self.rockType.shape[1]+60, 190, text="sandstone:", justify=LEFT, font="Verdana 14")
         self.canvas.create_text(self.rockType.shape[1]+60, 210, text="shale:", justify=LEFT, font="Verdana 14")
-        self.canvas.create_oval(self.rockType.shape[1]+130, 190, self.rockType.shape[1]+130, 190, width=15, outline="#ff14")
+        self.canvas.create_oval(self.rockType.shape[1]+130, 190, self.rockType.shape[1]+130, 190, width=15, outline="#ff3814")
         self.canvas.create_oval(self.rockType.shape[1]+130, 210, self.rockType.shape[1]+130, 210, width=15, outline="#019f67")
         self.master.update()
 
