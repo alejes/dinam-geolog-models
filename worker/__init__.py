@@ -8,7 +8,7 @@ import time
 import xlrd
 from multiprocessing import Process, Queue
 
-from find_trapeziums import find_trapeziums
+from find_trapeziums import find_trapeziums, test_trapeziums
 from painter.data import Geo, Match, Well, GeoTransformation
 from painter import image
 from painter import paint,seismic
@@ -111,42 +111,45 @@ def worker(config, q):
     print(global_min, global_max)
 
     print(len(nRockA), len(nRockB), len(nPorA), len(nPorB))
-    res = find_trapeziums(nRockA, nRockB, nPorA, nPorB)
-    print(res)
-
+    test_data, test_match = test_trapeziums()
     _geo = Geo(
-        Well(nRockA, nPorA),
-        Well(nRockB, nPorB),
+        Well(test_data[0], test_data[2]),
+        Well(test_data[1], test_data[3]),
         _transformation.width,
         _transformation.left_well_intent,
         _transformation.right_well_intent
     )
 
     _match = Match(
-        [match[1][0] for match in reversed(res)],
-        [match[0][0] + 1 for match in reversed(res)],
-        [match[1][1] for match in reversed(res)],
-        [match[0][1] + 1 for match in reversed(res)],
+        [match[1][0] for match in reversed(test_match)],
+        [match[0][0] + 1 for match in reversed(test_match)],
+        [match[1][1] for match in reversed(test_match)],
+        [match[0][1] + 1 for match in reversed(test_match)],
     )
 
-    _base_image = image.create(_geo.height, _geo.width)
+    _base_image = image.create(_geo.height, _geo.width, True)
     paint.wells(_base_image, _geo)
     paint.lines(_base_image, _geo, _match)
 
-    _core = image.create(_geo.height, _geo.width)
+    _core = image.create(_geo.height, _geo.width, True)
     paint.fill(_core, _geo, _match, name="core")
 
-    _por = image.create(_geo.height, _geo.width)
+    _por = image.create(_geo.height, _geo.width, True)
     paint.fill(_por, _geo, _match, name="log")
 
-    _core_result = image.create(_transformation.height, _transformation.width)
+    _core_result = image.create(_transformation.height, _transformation.width, True)
     seismic.paint_transformation(_core_result, _transformation, paint.bined(paint.filtered(_core)))
 
-    _por_result = image.create(_transformation.height, _transformation.width)
+    _por_result = image.create(_transformation.height, _transformation.width, True)
     seismic.paint_transformation(_por_result, _transformation, paint.filtered(_por))
 
-    paint.save(_core_result, "core.png")
+    print(_core_result.shape)
+
+    paint.save(paint.colorize(_core_result), "core.png")
+    print(_core_result)
     paint.save(_por_result, "porosity.png")
+
+    # image.show(paint.resized(_core_result), paint.resized(_por_result))
 
     def add_scale(data, min, max):
         scale = image.load("scale/colorscale_jet.jpg")
@@ -161,8 +164,9 @@ def worker(config, q):
                            cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255))
         return data
 
-    paint.save(add_scale(paint.depth(paint.resized(_core_result)), global_min, global_max), "core_4.png")
-    paint.save(add_scale(paint.depth(paint.resized(_por_result)), global_min, global_max), "porosity_4.png")
+    res = paint.resized(_core_result)
+    paint.save(paint.colorize(paint.resized(_core_result)), "core_2_ans.png")
+    paint.save(add_scale(paint.depth(paint.resized(_por_result)), global_min, global_max), "porosity_4_ans.png")
     q.put({'rock-resized': paint.resized(_core_result),
            'data2': np.array(np.random.random((400, 500)) * 255, dtype=int)})
 

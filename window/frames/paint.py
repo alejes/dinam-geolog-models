@@ -25,21 +25,22 @@ class Paint(Frame):
 
         self.canvas = Canvas(self, width=self.rockType.shape[1]+300, height=self.rockType.shape[0])
         self.canvas.place(x=100, y=0)
-        self.im = Image.frombytes('L', (self.rockType.shape[1], self.rockType.shape[0]), self.rockType.astype('b').tostring())
+        # self.im = Image.frombytes('L', (self.rockType.shape[1], self.rockType.shape[0]), self.rockType.astype('b').tostring())
+        self.im = Image.open("core_2_ans.png")
         # self.im = Image.open("porosity_4.png")
         # self.im = Image.fromarray(self.rockType)
-        print(self.im.mode)
-        lut = []
-        lut.extend([255, 56, 20]) #ff3814
-        lut.extend([1, 159, 103]) #019f67
-        lut.extend([0, 0, 0])  # black
-        self.im.putpalette(lut)
+        # print(self.im.mode)
+        # lut = []
+        # lut.extend([255, 56, 20]) #ff3814
+        # lut.extend([1, 159, 103]) #019f67
+        # lut.extend([0, 0, 0])  # black
+        # self.im.putpalette(lut)
         self.photo = ImageTk.PhotoImage(image=self.im)
         self.canvas.create_image(0, 0, image=self.photo, anchor=NW)
         self.canvas.create_text(self.rockType.shape[1]+60, 150, text="Legend:",justify=CENTER, font="Verdana 20")
         self.canvas.create_text(self.rockType.shape[1]+60, 190, text="sandstone:", justify=LEFT, font="Verdana 14")
         self.canvas.create_text(self.rockType.shape[1]+60, 210, text="shale:", justify=LEFT, font="Verdana 14")
-        self.canvas.create_oval(self.rockType.shape[1]+130, 190, self.rockType.shape[1]+130, 190, width=15, outline="#ff3814")
+        self.canvas.create_oval(self.rockType.shape[1]+130, 190, self.rockType.shape[1]+130, 190, width=15, outline="#ff14")
         self.canvas.create_oval(self.rockType.shape[1]+130, 210, self.rockType.shape[1]+130, 210, width=15, outline="#019f67")
         self.master.update()
 
@@ -50,7 +51,7 @@ class Paint(Frame):
         self.canvasPorosity = Canvas(self, width=self.porosity.shape[1] + 300, height=self.porosity.shape[0])
         self.canvasPorosity.place(x=100, y=start)
 
-        self.imPorosity = Image.open("porosity_4.png")
+        self.imPorosity = Image.open("porosity_4_ans.png")
         # self.imPorosity = Image.frombytes('L', (self.porosity.shape[1], self.porosity.shape[0]),
         #                           self.porosity.astype('b').tostring())
         # self.im = Image.fromarray(self.rockType)

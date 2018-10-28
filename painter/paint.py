@@ -118,11 +118,11 @@ def colorize(image: np.ndarray):
     new_image = np.zeros((image.shape[0], image.shape[1], 3))
     def get_rgb(x):
         if x < 127:
-            return 255, 56, 20
+            return 20, 56, 255
         elif x == 255:
             return 0, 0, 0
         else:
-            return 1, 159, 103
+            return 103, 159, 1
 
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
