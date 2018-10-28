@@ -2,6 +2,7 @@
 
 ## for run gui:
  * pip3 install -r requirements.txt
+ * change data in sample_data
  * python3 main.py
  
  Important: you must have python3-tk package:
