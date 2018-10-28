@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+from painter.data import Geo, Match, GeoTransformation, Layer
 from data import *
 
 

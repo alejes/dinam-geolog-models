@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import filedialog, ttk
 from window.frames.paint import Paint
 from worker import *
+from painter.data import GeoTransformation
 
 import os
 

@@ -9,7 +9,7 @@ import xlrd
 from multiprocessing import Process, Queue
 
 from find_trapeziums import find_trapeziums
-from painter.data import Geo, Match, Well
+from painter.data import Geo, Match, Well, GeoTransformation
 from painter import image
 from painter import paint,seismic
 
