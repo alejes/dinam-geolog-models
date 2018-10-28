@@ -2,7 +2,7 @@
 
 ## for run gui:
  * pip3 install -r requirements.txt
- * change data in sample_data
+ * change input data in sample_data and painter
  * python3 main.py
  
  Important: you must have python3-tk package:
