@@ -1,7 +1,7 @@
 import painter.image as image
 import painter.paint as paint
 import painter.seismic as seismic
-from find_trapeziums import find_trapeziums
+from find_trapeziums import find_trapeziums, test_trapeziums
 from painter.data import *
 from worker import load_excel, encode_array, normalize_rocks
 
@@ -17,16 +17,24 @@ if __name__ == '__main__':
     rockA = encode_array(rockA)
     rockB = encode_array(rockB)
 
-    nRockA, nRockB, nPorA, nPorB, start, end, step = normalize_rocks(rockA, rockB, porisityA, porisityB)
-    test_match = find_trapeziums(nRockA, nRockB, nPorA, nPorB)
-
+    test_data, test_match = test_trapeziums()
     _geo = Geo(
-        Well(nRockA, nPorA),
-        Well(nRockB, nPorB),
+        Well(test_data[0], test_data[2]),
+        Well(test_data[1], test_data[3]),
         _transformation.width,
         _transformation.left_well_intent,
         _transformation.right_well_intent
     )
+
+    # nRockA, nRockB, nPorA, nPorB, start, end, step = normalize_rocks(rockA, rockB, porisityA, porisityB)
+    # test_match = find_trapeziums(nRockA, nRockB, nPorA, nPorB)
+    # _geo = Geo(
+    #     Well(nRockA, nPorA),
+    #     Well(nRockB, nPorB),
+    #     _transformation.width,
+    #     _transformation.left_well_intent,
+    #     _transformation.right_well_intent
+    # )
 
     _match = Match(
         [match[1][0] for match in reversed(test_match)],
