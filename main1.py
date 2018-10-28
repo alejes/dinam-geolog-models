@@ -19,6 +19,9 @@ if __name__ == '__main__':
     rockA = encode_array(rockA)
     rockB = encode_array(rockB)
 
+    global_min = round(min(list(map(lambda x: x[1], porisityA)) + list(map(lambda x: x[1], porisityB))), 2)
+    global_max = round(max(list(map(lambda x: x[1], porisityA)) + list(map(lambda x: x[1], porisityB))), 2)
+
     test_data, test_match = test_trapeziums()
     _geo = Geo(
         Well(test_data[0], test_data[2]),
