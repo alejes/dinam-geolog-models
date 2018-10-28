@@ -87,6 +87,9 @@ def filtered(image: np.ndarray):
 def resized(image: np.ndarray):
     return cv2.resize(image, (500, 250))
 
+def depth(image: np.ndarray):
+    return cv2.applyColorMap(image, cv2.COLORMAP_JET)
+
 
 def save(image: np.ndarray, name: str):
     cv2.imwrite(name, image)
@@ -97,6 +100,7 @@ def bined(image: np.ndarray):
         if x < 127:
             return 0
         elif x == 255:
+            print(x)
             return 255
         else:
             return 254

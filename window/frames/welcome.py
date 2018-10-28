@@ -43,14 +43,17 @@ class Welcome(Frame):
             proc = run_paint(self.task_config)
 
             def waiter():
+                data = WorkerConfig.q.get()
+                WorkerConfig.q.close()
+                WorkerConfig.q.join_thread()
                 while proc.is_alive():
                     time.sleep(0.1)
 
                 self.master.withdraw()
                 self.master = Toplevel(self)
                 # self.master.geometry("950x500+300+300")
-                data1 = np.array(np.random.random((400, 650)) * 255, dtype=int)
-                data2 = np.array(np.random.random((400, 500)) * 255, dtype=int)
+                data1 = data['rock-resized']
+                data2 = data['data2']
                 Paint(self.master, data1, data2)
 
             threading.Thread(target=waiter).start()
