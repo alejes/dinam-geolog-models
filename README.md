@@ -1,6 +1,7 @@
 # dinam-geolog-models
 
 ## for run gui:
+ * pip3 install -r requriments.txt
  * python main.py
  
  Important: you must have python3-tk package:
