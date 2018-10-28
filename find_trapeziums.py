@@ -66,6 +66,8 @@ def fill_levi(
     cache.b[a_index, b_index] = min_ans_b
     cache.ans[a_index, b_index] = min_ans
 
+random.seed(5891)
+
 def find_trapeziums(
     a_types,
     b_types,
@@ -187,6 +189,7 @@ def test_trapeziums():
     b_pors_param = [val for idx, val in enumerate(b_pors_param) if idx % 40 == 0]
 
     while len(a_pors_param) < len(a_types_param):
+        #for uniform distributiob
         idx = random.randint(0, len(a_pors_param) - 2)
         a_pors_param.insert(idx, (a_pors_param[idx] + a_pors_param[idx + 1]) / 2)
 

@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 
 from data import *
-from painter.data import Geo, Match
+#from painter.data import Geo, Match
+from data import Geo, Match
 
 
 def wells(image: np.ndarray, geo: Geo) -> None:
